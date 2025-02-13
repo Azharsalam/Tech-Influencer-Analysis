@@ -1,6 +1,7 @@
-SELECT 
+SELECT
     post_type,
     SUM(reach) AS total_reach,
-    (SUM(reach) / (SELECT SUM(reach) FROM fact_content)) * 100 AS reach_percentage
+    ROUND((SUM(reach) * 100.0) / SUM(SUM(reach)) OVER (), 2) AS reach_percentage
 FROM fact_content
-GROUP BY post_type;
+GROUP BY post_type
+ORDER BY reach_percentage DESC;
